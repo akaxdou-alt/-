@@ -1,14 +1,70 @@
-import { Image, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { Image, LogOut, LockKeyhole, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import { emptyDish } from '../constants';
 import { EmptyState } from '../components/EmptyState';
 import { ItemImage } from '../components/ItemImage';
 import { SectionHeader } from '../components/SectionHeader';
 
+const ADMIN_PASSWORD = 'djh200243..';
+const ADMIN_STORAGE_KEY = 'couple-menu-admin-unlocked';
+
 const inputClass =
   'mt-1 h-11 w-full rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300';
 
+function AdminLock({ onUnlock }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem(ADMIN_STORAGE_KEY, 'true');
+      setError('');
+      onUnlock();
+      return;
+    }
+    setError('密码不对');
+  };
+
+  return (
+    <section>
+      <SectionHeader eyebrow="admin" title="管理模式" />
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto max-w-md rounded-lg border border-cyan-300/25 bg-slate-950/72 p-5 shadow-[0_0_24px_rgba(34,211,238,0.13)]"
+      >
+        <label className="block">
+          <span className="text-sm font-bold text-cyan-100">密码</span>
+          <div className="mt-1 flex items-center gap-2 rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 focus-within:border-cyan-300">
+            <LockKeyhole className="h-4 w-4 shrink-0 text-cyan-200" />
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setError('');
+              }}
+              className="h-11 min-w-0 flex-1 border-0 bg-transparent text-white outline-none"
+              autoComplete="current-password"
+              autoFocus
+            />
+          </div>
+        </label>
+        {error ? <p className="mt-3 text-sm font-bold text-fuchsia-200">{error}</p> : null}
+        <button
+          type="submit"
+          className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-5 text-sm font-black text-slate-950 transition hover:bg-fuchsia-300"
+        >
+          <LockKeyhole className="h-4 w-4" />
+          进入管理
+        </button>
+      </form>
+    </section>
+  );
+}
+
 export function AdminPage({ dishesStore }) {
+  const [isUnlocked, setIsUnlocked] = useState(() => localStorage.getItem(ADMIN_STORAGE_KEY) === 'true');
   const [form, setForm] = useState(emptyDish);
   const [editingId, setEditingId] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -20,6 +76,12 @@ export function AdminPage({ dishesStore }) {
   const resetForm = () => {
     setEditingId('');
     setForm(emptyDish);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(ADMIN_STORAGE_KEY);
+    resetForm();
+    setIsUnlocked(false);
   };
 
   const handleSubmit = async (event) => {
@@ -61,9 +123,23 @@ export function AdminPage({ dishesStore }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  if (!isUnlocked) {
+    return <AdminLock onUnlock={() => setIsUnlocked(true)} />;
+  }
+
   return (
     <section>
-      <SectionHeader eyebrow="admin" title="菜品管理" />
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <SectionHeader eyebrow="admin" title="菜品管理" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-fuchsia-300/45 bg-fuchsia-400/15 px-4 text-sm font-black text-fuchsia-100 transition hover:bg-fuchsia-400/25"
+        >
+          <LogOut className="h-4 w-4" />
+          退出管理模式
+        </button>
+      </div>
 
       <form
         onSubmit={handleSubmit}

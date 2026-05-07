@@ -1,4 +1,4 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { LockKeyhole, LogOut, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
 import { ItemImage } from '../components/ItemImage';
@@ -6,14 +6,76 @@ import { QuantityStepper } from '../components/QuantityStepper';
 import { SectionHeader } from '../components/SectionHeader';
 import { emptyInventory } from '../constants';
 
+const FRIDGE_PASSWORD = 'djh200243..';
+const FRIDGE_STORAGE_KEY = 'couple-menu-fridge-unlocked';
+
 const inputClass =
   'mt-1 h-11 w-full rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300';
 
+function FridgeLock({ onUnlock }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (password === FRIDGE_PASSWORD) {
+      localStorage.setItem(FRIDGE_STORAGE_KEY, 'true');
+      setError('');
+      onUnlock();
+      return;
+    }
+    setError('密码不对');
+  };
+
+  return (
+    <section>
+      <SectionHeader eyebrow="fridge" title="冰箱库存" />
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto max-w-md rounded-lg border border-cyan-300/25 bg-slate-950/72 p-5 shadow-[0_0_24px_rgba(34,211,238,0.13)]"
+      >
+        <label className="block">
+          <span className="text-sm font-bold text-cyan-100">密码</span>
+          <div className="mt-1 flex items-center gap-2 rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 focus-within:border-cyan-300">
+            <LockKeyhole className="h-4 w-4 shrink-0 text-cyan-200" />
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setError('');
+              }}
+              className="h-11 min-w-0 flex-1 border-0 bg-transparent text-white outline-none"
+              autoComplete="current-password"
+              autoFocus
+            />
+          </div>
+        </label>
+        {error ? <p className="mt-3 text-sm font-bold text-fuchsia-200">{error}</p> : null}
+        <button
+          type="submit"
+          className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-5 text-sm font-black text-slate-950 transition hover:bg-fuchsia-300"
+        >
+          <LockKeyhole className="h-4 w-4" />
+          进入冰箱
+        </button>
+      </form>
+    </section>
+  );
+}
+
 export function FridgePage({ inventoryStore }) {
+  const [isUnlocked, setIsUnlocked] = useState(() => localStorage.getItem(FRIDGE_STORAGE_KEY) === 'true');
   const [form, setForm] = useState(emptyInventory);
 
   const handleChange = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(FRIDGE_STORAGE_KEY);
+    setForm(emptyInventory);
+    setIsUnlocked(false);
   };
 
   const handleSubmit = async (event) => {
@@ -34,9 +96,23 @@ export function FridgePage({ inventoryStore }) {
     await inventoryStore.updateItem(item.id, { quantity: Math.max(0, Number(quantity || 0)) });
   };
 
+  if (!isUnlocked) {
+    return <FridgeLock onUnlock={() => setIsUnlocked(true)} />;
+  }
+
   return (
     <section>
-      <SectionHeader eyebrow="fridge" title="冰箱库存" />
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <SectionHeader eyebrow="fridge" title="冰箱库存" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-fuchsia-300/45 bg-fuchsia-400/15 px-4 text-sm font-black text-fuchsia-100 transition hover:bg-fuchsia-400/25"
+        >
+          <LogOut className="h-4 w-4" />
+          退出冰箱模式
+        </button>
+      </div>
 
       <form
         onSubmit={handleSubmit}
