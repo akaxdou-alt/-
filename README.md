@@ -42,3 +42,18 @@ service cloud.firestore {
   }
 }
 ```
+
+## Firebase Storage 规则示例
+
+管理页上传的菜品图片会存到 `homes/couple-home/dishes`。
+
+```js
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /homes/couple-home/dishes/{fileName} {
+      allow read, write: if true;
+    }
+  }
+}
+```
