@@ -20,6 +20,28 @@ npm run dev
 
 在 `.env.local` 里填入 Firebase Web App 配置，然后在 Firebase 控制台启用 Firestore Database。
 
+## 本地图片
+
+不使用 Firebase Storage。菜品图片路径直接保存到 Firestore 的 `imageUrl` 字段。
+
+把图片放到：
+
+```text
+public/images/蚝油生菜.jpg
+```
+
+管理页的“图片路径 / 图片 URL”输入：
+
+```text
+/images/蚝油生菜.jpg
+```
+
+也可以填写普通网络图片 URL，例如：
+
+```text
+https://example.com/dish.jpg
+```
+
 ## Firestore 数据结构
 
 ```text
@@ -37,21 +59,6 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /homes/couple-home/{collection}/{document} {
-      allow read, write: if true;
-    }
-  }
-}
-```
-
-## Firebase Storage 规则示例
-
-管理页上传的菜品图片会存到 `homes/couple-home/dishes`。
-
-```js
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /homes/couple-home/dishes/{fileName} {
       allow read, write: if true;
     }
   }

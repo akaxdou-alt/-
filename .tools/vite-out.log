@@ -10,3 +10,9 @@
 [2m19:05:15[22m [36m[1m[vite][22m[39m server restarted.
 [2m19:06:26[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
 [2m19:06:27[22m [36m[1m[vite][22m[39m server restarted.
+[2m19:31:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/App.jsx, /src/components/AppShell.jsx[22m
+[2m19:31:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.jsx, /src/styles.css[22m
+[2m19:31:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ new dependencies optimized: [33mfirebase/storage[32m[39m
+[2m19:31:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m19:44:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css, /src/App.jsx, /src/components/AppShell.jsx, /src/pages/AdminPage.jsx[22m
+[2m19:44:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.jsx, /src/styles.css[22m
