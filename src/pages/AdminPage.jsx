@@ -5,6 +5,9 @@ import { EmptyState } from '../components/EmptyState';
 import { ItemImage } from '../components/ItemImage';
 import { SectionHeader } from '../components/SectionHeader';
 
+const inputClass =
+  'mt-1 h-11 w-full rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300';
+
 export function AdminPage({ dishesStore }) {
   const [form, setForm] = useState(emptyDish);
   const [editingId, setEditingId] = useState('');
@@ -60,73 +63,66 @@ export function AdminPage({ dishesStore }) {
 
   return (
     <section>
-      <SectionHeader
-        eyebrow="admin"
-        title="维护你们的菜单"
-        description="图片可以填写网络 URL，也可以填写 public/images 里的本地路径，例如 /images/蚝油生菜.jpg。"
-      />
+      <SectionHeader eyebrow="admin" title="菜品管理" />
 
-      <form onSubmit={handleSubmit} className="mb-6 rounded-lg bg-white p-4 shadow-sm ring-1 ring-rose-100">
+      <form
+        onSubmit={handleSubmit}
+        className="mb-6 rounded-lg border border-cyan-300/25 bg-slate-950/72 p-4 shadow-[0_0_24px_rgba(34,211,238,0.13)]"
+      >
         <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
-          <div>
-            <div className="aspect-square overflow-hidden rounded-lg bg-amber-50 ring-1 ring-rose-100">
-              <ItemImage src={form.imageUrl} alt={form.name || '菜品图片'} />
-            </div>
-            <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-stone-600">
-              把图片放到 <span className="font-semibold text-stone-900">public/images</span>，这里填
-              <span className="font-semibold text-stone-900"> /images/文件名.jpg</span>。
-            </div>
+          <div className="aspect-square overflow-hidden rounded-lg border border-fuchsia-300/25 bg-slate-900">
+            <ItemImage src={form.imageUrl} alt={form.name || '菜品图片'} />
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block">
-              <span className="text-sm font-semibold text-stone-700">菜名</span>
+              <span className="text-sm font-bold text-cyan-100">菜名</span>
               <input
                 value={form.name}
                 onChange={(event) => handleChange('name', event.target.value)}
-                className="mt-1 h-11 w-full rounded-lg border border-stone-200 px-3 outline-none transition focus:border-teal-500"
+                className={inputClass}
                 placeholder="蚝油生菜"
                 required
               />
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-stone-700">分类</span>
+              <span className="text-sm font-bold text-cyan-100">分类</span>
               <input
                 value={form.category}
                 onChange={(event) => handleChange('category', event.target.value)}
-                className="mt-1 h-11 w-full rounded-lg border border-stone-200 px-3 outline-none transition focus:border-teal-500"
-                placeholder="家常菜 / 甜点 / 饮料"
+                className={inputClass}
+                placeholder="家常菜"
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-sm font-semibold text-stone-700">图片路径 / 图片 URL</span>
-              <div className="mt-1 flex items-center gap-2 rounded-lg border border-stone-200 px-3 focus-within:border-teal-500">
-                <Image className="h-4 w-4 shrink-0 text-stone-400" />
+              <span className="text-sm font-bold text-cyan-100">图片路径 / 图片 URL</span>
+              <div className="mt-1 flex items-center gap-2 rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 focus-within:border-cyan-300">
+                <Image className="h-4 w-4 shrink-0 text-cyan-200" />
                 <input
                   value={form.imageUrl}
                   onChange={(event) => handleChange('imageUrl', event.target.value)}
-                  className="h-11 min-w-0 flex-1 border-0 bg-transparent outline-none"
-                  placeholder="/images/蚝油生菜.jpg 或 https://..."
+                  className="h-11 min-w-0 flex-1 border-0 bg-transparent text-white outline-none placeholder:text-slate-500"
+                  placeholder="/images/蚝油生菜.jpg"
                 />
               </div>
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-stone-700">默认数量</span>
+              <span className="text-sm font-bold text-cyan-100">默认数量</span>
               <input
                 type="number"
                 min="1"
                 value={form.defaultQuantity}
                 onChange={(event) => handleChange('defaultQuantity', event.target.value)}
-                className="mt-1 h-11 w-full rounded-lg border border-stone-200 px-3 outline-none transition focus:border-teal-500"
+                className={inputClass}
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-sm font-semibold text-stone-700">描述</span>
+              <span className="text-sm font-bold text-cyan-100">描述</span>
               <textarea
                 value={form.description}
                 onChange={(event) => handleChange('description', event.target.value)}
-                className="mt-1 min-h-24 w-full rounded-lg border border-stone-200 px-3 py-2 outline-none transition focus:border-teal-500"
-                placeholder="清爽下饭，适合晚餐加一道绿叶菜"
+                className="mt-1 min-h-24 w-full rounded-lg border border-cyan-300/25 bg-slate-950/70 px-3 py-2 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300"
+                placeholder="清爽下饭"
               />
             </label>
           </div>
@@ -136,7 +132,7 @@ export function AdminPage({ dishesStore }) {
           <button
             type="submit"
             disabled={isSaving}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-stone-900 px-5 text-sm font-bold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-cyan-300 px-5 text-sm font-black text-slate-950 transition hover:bg-fuchsia-300 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {editingId ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
             {isSaving ? '保存中' : editingId ? '保存修改' : '添加菜品'}
@@ -146,7 +142,7 @@ export function AdminPage({ dishesStore }) {
               type="button"
               onClick={resetForm}
               disabled={isSaving}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-stone-100 px-5 text-sm font-bold text-stone-700 transition hover:bg-stone-200 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-500/40 bg-slate-800/80 px-5 text-sm font-black text-slate-100 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <X className="h-4 w-4" />
               取消
@@ -155,21 +151,22 @@ export function AdminPage({ dishesStore }) {
         </div>
       </form>
 
-      {dishesStore.items.length === 0 ? (
-        <EmptyState title="还没有菜品" description="从上面的表单添加第一道菜，菜单页会自动出现。" />
-      ) : null}
+      {dishesStore.items.length === 0 ? <EmptyState title="还没有菜品" /> : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
         {dishesStore.items.map((dish) => (
-          <article key={dish.id} className="grid grid-cols-[84px_1fr] gap-3 rounded-lg bg-white p-3 ring-1 ring-rose-100">
-            <div className="aspect-square overflow-hidden rounded-md bg-amber-50">
+          <article
+            key={dish.id}
+            className="grid grid-cols-[84px_1fr] gap-3 rounded-lg border border-cyan-300/25 bg-slate-950/72 p-3 shadow-[0_0_18px_rgba(34,211,238,0.1)]"
+          >
+            <div className="aspect-square overflow-hidden rounded-md bg-slate-900">
               <ItemImage src={dish.imageUrl} alt={dish.name} />
             </div>
             <div className="min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="truncate font-bold text-stone-900">{dish.name}</h3>
-                  <p className="text-sm text-teal-700">
+                  <h3 className="truncate font-black text-white">{dish.name}</h3>
+                  <p className="text-sm text-cyan-200">
                     {dish.category || '其他'} · 默认 {dish.defaultQuantity || 1} 份
                   </p>
                 </div>
@@ -177,7 +174,7 @@ export function AdminPage({ dishesStore }) {
                   <button
                     type="button"
                     onClick={() => startEditing(dish)}
-                    className="grid h-9 w-9 place-items-center rounded-md text-stone-500 transition hover:bg-teal-50 hover:text-teal-700"
+                    className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-cyan-300/15 hover:text-cyan-100"
                     aria-label="编辑菜品"
                   >
                     <Pencil className="h-4 w-4" />
@@ -185,14 +182,14 @@ export function AdminPage({ dishesStore }) {
                   <button
                     type="button"
                     onClick={() => dishesStore.removeItem(dish.id)}
-                    className="grid h-9 w-9 place-items-center rounded-md text-stone-500 transition hover:bg-rose-50 hover:text-rose-700"
+                    className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-fuchsia-400/15 hover:text-fuchsia-100"
                     aria-label="删除菜品"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
-              <p className="mt-2 line-clamp-2 text-sm leading-5 text-stone-600">{dish.description}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-5 text-slate-300">{dish.description}</p>
             </div>
           </article>
         ))}
