@@ -6,6 +6,7 @@ import { SectionHeader } from '../components/SectionHeader';
 
 export function OrderPage({ ordersStore }) {
   const totalQuantity = ordersStore.items.reduce((total, item) => total + Number(item.quantity || 0), 0);
+  const hasOrders = ordersStore.items.length > 0;
 
   const handleQuantityChange = async (item, quantity) => {
     if (quantity <= 0) {
@@ -15,15 +16,31 @@ export function OrderPage({ ordersStore }) {
     await ordersStore.updateItem(item.id, { quantity });
   };
 
+  const handleClearAll = async () => {
+    await Promise.all(ordersStore.items.map((item) => ordersStore.removeItem(item.id)));
+  };
+
   return (
     <section>
-      <SectionHeader
-        eyebrow="tonight"
-        title="今晚点单"
-        description={`现在一共 ${totalQuantity} 份，打开同一个网址的人都会实时看到更新。`}
-      />
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <SectionHeader
+          eyebrow="tonight"
+          title="今晚点单"
+          description={`现在一共 ${totalQuantity} 份，打开同一个网址的人都会实时看到更新。`}
+        />
+        {hasOrders ? (
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-rose-100 px-4 text-sm font-bold text-rose-800 transition hover:bg-rose-200"
+          >
+            <Trash2 className="h-4 w-4" />
+            清空全部
+          </button>
+        ) : null}
+      </div>
 
-      {ordersStore.items.length === 0 ? (
+      {!hasOrders ? (
         <EmptyState title="今晚还没点菜" description="去菜单页选几道菜，点单会马上出现在这里。" />
       ) : null}
 
